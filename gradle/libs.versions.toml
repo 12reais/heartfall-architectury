@@ -1,0 +1,23 @@
+[versions]
+minecraft = "1.21.9"
+architectury-api = "18.0.5"
+fabric-loader = "0.18.1"
+fabric-api = "0.134.0+1.21.9"
+neoforge = "21.9.16-beta"
+loom-plugin = "1.13-SNAPSHOT"
+architectury-plugin = "3.4-SNAPSHOT"
+shadow-plugin = "8.3.6"
+
+[libraries]
+minecraft = { module = "net.minecraft:minecraft", version.ref = "minecraft" }
+fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
+architectury = { module = "dev.architectury:architectury", version.ref = "architectury-api" }
+fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
+architectury-fabric = { module = "dev.architectury:architectury-fabric", version.ref = "architectury-api" }
+architectury-neoforge = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury-api" }
+neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
+
+[plugins]
+loom = { id = "dev.architectury.loom", version.ref = "loom-plugin" }
+architectury = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow-plugin" }

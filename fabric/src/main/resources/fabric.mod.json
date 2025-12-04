@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "heartfall",
+  "version": "${version}",
+  "name": "${modName}",
+  "description": "${modDescription}",
+  "authors": [
+    "${modAuthor}"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.org/mod/heartfall",
+    "sources": "https://github.com/rcxe/heartfall-architectury"
+  },
+  "license": "${modLicense}",
+  "icon": "assets/heartfall/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "at.acpi.heartfall.fabric.HeartfallFabric"
+    ],
+    "client": [
+      "at.acpi.heartfall.fabric.client.HeartfallFabricClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": ">=1.21.8",
+    "java": ">=17",
+    "architectury": ">=17.0.8",
+    "fabric-api": "*"
+  }
+}
