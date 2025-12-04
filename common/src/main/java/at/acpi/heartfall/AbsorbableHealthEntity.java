@@ -17,17 +17,15 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 public class AbsorbableHealthEntity extends Entity {
-    private static final EntityDataAccessor<Float> DATA_HEAL =
-            SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.FLOAT);
-
-    private static final EntityDataAccessor<Integer> DATA_DEATH_TICKS =
-            SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.INT);
-
-    private static final float MIN_HEAL = 1.5f,
-            MAX_HEAL = 7.5f;
-    private static final double PICKUP_RANGE = 1.4,
+    public static final float MIN_HEAL = 1.5f,
+            MAX_HEAL = 5f;
+    public static final double PICKUP_RANGE = 1.25,
             ATTRACTION_RANGE = 5,
             ATTRACTION_SPEED = 0.1;
+    private static final EntityDataAccessor<Float> DATA_HEAL =
+            SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Integer> DATA_DEATH_TICKS =
+            SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.INT);
     private static final double GRAVITY = 0.075,
             DAMPING = 0.9,
             ATTRACTION_BLEND = 0.25,
@@ -73,6 +71,7 @@ public class AbsorbableHealthEntity extends Entity {
         this.getEntityData().set(DATA_DEATH_TICKS, ticks);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isDying() {
         return getDeathTicks() > 0;
     }
@@ -123,13 +122,24 @@ public class AbsorbableHealthEntity extends Entity {
 
         this.setDeltaMovement(motion);
         this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().multiply(DAMPING, 1, DAMPING));
+        this.setDeltaMovement(this.getDeltaMovement().scale(DAMPING));
     }
 
     private boolean handleDeathAnimation() {
         if (!isDying()) return false;
         int ticks = getDeathTicks() - 1;
         setDeathTicks(ticks);
+
+        Player nearest = level().getNearestPlayer(this, ATTRACTION_RANGE);
+        if (nearest != null) {
+            double progress = 1.0 - (ticks / (double) DEATH_ANIMATION_TICKS);
+            Vec3 current = position();
+            Vec3 target = nearest.position().add(0, nearest.getBbHeight() * 0.25, 0);
+            setPos(current.x * (1 - progress) + target.x * progress,
+                    current.y * (1 - progress) + target.y * progress,
+                    current.z * (1 - progress) + target.z * progress);
+        }
+
         if (ticks <= 0) discard();
         return true;
     }
@@ -155,7 +165,7 @@ public class AbsorbableHealthEntity extends Entity {
     }
 
     private Vec3 attractTowards(Vec3 motion, Player player) {
-        Vec3 target = player.position().add(0, player.getBbHeight() / 2.75, 0);
+        Vec3 target = player.position().add(0, player.getBbHeight() * 0.25, 0);
         Vec3 toPlayer = target.subtract(this.position());
 
         double distance = toPlayer.length();
@@ -180,16 +190,13 @@ public class AbsorbableHealthEntity extends Entity {
         float hp = Math.min(player.getHealth() + getHeal(), player.getMaxHealth());
         player.setHealth(hp);
 
-        float pitch = 1.25f + this.random.nextFloat() * 0.5f;
         player.level().playSound(
                 null,
-                player.getX(),
-                player.getY(),
-                player.getZ(),
-                SoundEvents.ITEM_PICKUP,
+                player.getX(), player.getY(), player.getZ(),
+                SoundEvents.BUBBLE_POP,
                 SoundSource.PLAYERS,
-                1f,
-                pitch
+                10f,
+                1f
         );
         setDeathTicks(DEATH_ANIMATION_TICKS);
     }

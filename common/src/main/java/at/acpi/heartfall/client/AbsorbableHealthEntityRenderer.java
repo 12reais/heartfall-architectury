@@ -51,12 +51,13 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
         float deathProgress = entity.getDeathProgress(partialTicks);
 
         state.rotation = delta / 20.0f;
-        state.scale = 0.5f + deathProgress * 0.75f;
+        state.scale = 0.5f + (float) Math.sin(delta * 0.25f) * 0.05f;
         state.bob = .5f + bob;
 
         float pulse = 0.75f + (float) Math.sin(delta * 0.25f) * 0.1f;
         float ageFade = 1.0f - Math.max(0, entity.tickCount - 220) / 100.0f;
-        state.alpha = (int) (pulse * ageFade * (1f - deathProgress) * 255f);
+
+        state.alpha = (int) (pulse * ageFade * (1f - deathProgress) * 225f);
     }
 
     @Override
