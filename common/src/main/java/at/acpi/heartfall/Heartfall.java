@@ -15,11 +15,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 
 public final class Heartfall {
     public static final String MOD_ID = "heartfall";
 
-    private static final float DROP_CHANCE = 0.325f;
+    private static final float BASE_DROP_CHANCE = .175f;
+    private static final float MAX_DROP_CHANCE = .49f;
 
     private static final DeferredRegister<EntityType<?>> ENTITIES =
             DeferredRegister.create(MOD_ID, Registries.ENTITY_TYPE);
@@ -41,8 +43,13 @@ public final class Heartfall {
         EntityEvent.LIVING_DEATH.register(Heartfall::spawn);
     }
 
-    private static boolean shouldDrop(LivingEntity entity) {
-        return entity.getRandom().nextFloat() < DROP_CHANCE;
+    private static boolean shouldDrop(LivingEntity entity, DamageSource src) {
+        float chance = BASE_DROP_CHANCE;
+        if (src.getEntity() instanceof Player player && !player.isCreative()) {
+            float healthFraction = player.getHealth() / player.getMaxHealth();
+            chance = BASE_DROP_CHANCE + (MAX_DROP_CHANCE - BASE_DROP_CHANCE) * (1f - healthFraction);
+        }
+        return entity.getRandom().nextFloat() < chance;
     }
 
     @SuppressWarnings("resource")
@@ -52,7 +59,7 @@ public final class Heartfall {
         if (!(entity instanceof Mob) || entity instanceof Animal)
             return EventResult.pass();
 
-        if (!shouldDrop(entity))
+        if (!shouldDrop(entity, src))
             return EventResult.pass();
 
         var health = new AbsorbableHealthEntity(ABSORBABLE_HEALTH.get(), entity.level());
