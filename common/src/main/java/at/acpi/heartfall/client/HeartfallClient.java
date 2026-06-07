@@ -1,10 +1,11 @@
 package at.acpi.heartfall.client;
 
-import at.acpi.heartfall.Heartfall;
+import at.acpi.heartfall.registry.HeartfallEntities;
 import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 
 public class HeartfallClient {
     public static void init() {
-        EntityRendererRegistry.register(Heartfall.ABSORBABLE_HEALTH, AbsorbableHealthEntityRenderer::new);
+        HeartShardEntityRenderer.register();
+        EntityRendererRegistry.register(HeartfallEntities.HEARD_SHARD, HeartShardEntityRenderer::new);
     }
 }

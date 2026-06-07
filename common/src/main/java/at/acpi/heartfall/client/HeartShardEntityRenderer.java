@@ -1,9 +1,11 @@
 package at.acpi.heartfall.client;
 
-import at.acpi.heartfall.AbsorbableHealthEntity;
+import at.acpi.heartfall.entity.HeartShardEntity;
+import at.acpi.heartfall.registry.HeartfallEntities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -17,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 
-public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHealthEntity, AbsorbableHealthEntityRenderer.AbsorbableHealthEntityRenderState> {
+public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, HeartShardEntityRenderer.AbsorbableHealthEntityRenderState> {
     private static final Identifier
             CONTAINER = Identifier.withDefaultNamespace("textures/gui/sprites/hud/heart/container.png"),
             HEART_FULL = Identifier.withDefaultNamespace("textures/gui/sprites/hud/heart/full.png");
@@ -27,25 +29,25 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
             HEART_LAYER = RenderTypes.itemTranslucent(HEART_FULL);
 
     private static final float
-            BOB_PRIMARY_PERIOD    = 8.0f,
-            BOB_PRIMARY_AMP       = 0.08f,
-            BOB_SECONDARY_PERIOD  = 5.3f,
-            BOB_SECONDARY_AMP     = 0.03f,
-            BOB_BASE              = 0.5f,
-            ROTATION_PERIOD       = 25.0f,
-            SCALE_BASE            = 0.5f,
-            SCALE_PRIMARY_FREQ    = 0.18f,
-            SCALE_PRIMARY_AMP     = 0.03f,
-            SCALE_SECONDARY_FREQ  = 0.31f,
-            SCALE_SECONDARY_AMP   = 0.015f,
-            PULSE_BASE            = 0.85f,
-            PULSE_FREQ            = 0.22f,
-            PULSE_AMP             = 0.08f,
-            AGE_FADE_START_TICKS  = 200f,
-            AGE_FADE_DURATION     = 120f,
-            ALPHA_MAX             = 230f;
+            BOB_PRIMARY_PERIOD = 8.0f,
+            BOB_PRIMARY_AMP = 0.08f,
+            BOB_SECONDARY_PERIOD = 5.3f,
+            BOB_SECONDARY_AMP = 0.03f,
+            BOB_BASE = 0.5f,
+            ROTATION_PERIOD = 25.0f,
+            SCALE_BASE = 0.5f,
+            SCALE_PRIMARY_FREQ = 0.18f,
+            SCALE_PRIMARY_AMP = 0.03f,
+            SCALE_SECONDARY_FREQ = 0.31f,
+            SCALE_SECONDARY_AMP = 0.015f,
+            PULSE_BASE = 0.85f,
+            PULSE_FREQ = 0.22f,
+            PULSE_AMP = 0.08f,
+            AGE_FADE_START_TICKS = 200f,
+            AGE_FADE_DURATION = 120f,
+            ALPHA_MAX = 230f;
 
-    public AbsorbableHealthEntityRenderer(EntityRendererProvider.Context ctx) {
+    public HeartShardEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
@@ -59,25 +61,25 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
     }
 
     @Override
-    public void extractRenderState(@NonNull AbsorbableHealthEntity entity, @NonNull AbsorbableHealthEntityRenderState state, float partialTicks) {
+    public void extractRenderState(@NonNull HeartShardEntity entity, @NonNull AbsorbableHealthEntityRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         float delta = entity.tickCount + partialTicks;
 
-        float bob = (float)(Math.sin(delta / BOB_PRIMARY_PERIOD) * BOB_PRIMARY_AMP
+        float bob = (float) (Math.sin(delta / BOB_PRIMARY_PERIOD) * BOB_PRIMARY_AMP
                 + Math.sin(delta / BOB_SECONDARY_PERIOD) * BOB_SECONDARY_AMP);
         float deathProgress = entity.getDeathProgress(partialTicks);
 
         state.rotation = delta / ROTATION_PERIOD;
-        state.scale    = SCALE_BASE
+        state.scale = SCALE_BASE
                 + (float) Math.sin(delta * SCALE_PRIMARY_FREQ) * SCALE_PRIMARY_AMP
                 + (float) Math.sin(delta * SCALE_SECONDARY_FREQ) * SCALE_SECONDARY_AMP;
-        state.bob      = BOB_BASE + bob;
+        state.bob = BOB_BASE + bob;
 
-        float pulse    = PULSE_BASE + (float) Math.sin(delta * PULSE_FREQ) * PULSE_AMP;
-        float ageFade  = 1.0f - Math.max(0f, (entity.tickCount - AGE_FADE_START_TICKS) / AGE_FADE_DURATION);
+        float pulse = PULSE_BASE + (float) Math.sin(delta * PULSE_FREQ) * PULSE_AMP;
+        float ageFade = 1.0f - Math.max(0f, (entity.tickCount - AGE_FADE_START_TICKS) / AGE_FADE_DURATION);
         float deathFade = deathProgress > 0f ? (float) Math.pow(1f - deathProgress, 2f) : 1f;
 
-        state.alpha = (int)(pulse * ageFade * deathFade * ALPHA_MAX);
+        state.alpha = (int) (pulse * ageFade * deathFade * ALPHA_MAX);
     }
 
     @Override
@@ -114,5 +116,9 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
     public static class AbsorbableHealthEntityRenderState extends EntityRenderState {
         public float scale, rotation, bob;
         public int alpha;
+    }
+
+    public static void register() {
+        EntityRendererRegistry.register(HeartfallEntities.HEARD_SHARD, HeartShardEntityRenderer::new);
     }
 }
