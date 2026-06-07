@@ -5,8 +5,8 @@ import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -45,6 +45,7 @@ public final class Heartfall {
         return entity.getRandom().nextFloat() < DROP_CHANCE;
     }
 
+    @SuppressWarnings("resource")
     private static EventResult spawn(LivingEntity entity, DamageSource src) {
         if (entity.level().isClientSide()) return EventResult.pass();
 
@@ -70,7 +71,7 @@ public final class Heartfall {
         return EventResult.pass();
     }
 
-    public static ResourceLocation of(String location) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, location);
+    public static Identifier of(String location) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, location);
     }
 }

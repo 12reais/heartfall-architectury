@@ -15,7 +15,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jspecify.annotations.NonNull;
 
+@SuppressWarnings("resource")
 public class AbsorbableHealthEntity extends Entity {
     public static final float MIN_HEAL = 1.5f,
             MAX_HEAL = 5f;
@@ -82,7 +84,7 @@ public class AbsorbableHealthEntity extends Entity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+    public boolean hurtServer(@NonNull ServerLevel serverLevel, @NonNull DamageSource damageSource, float f) {
         return false;
     }
 
