@@ -14,20 +14,20 @@ logoFile = "assets/heartfall/icon.png"
 [[dependencies.heartfall]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.0,)"
+versionRange = "[26.1,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.heartfall]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.8,)"
-ordering = "NONE"
+versionRange = "[26.1,)"
+ordering = "NONE"a
 side = "BOTH"
 
 [[dependencies.heartfall]]
 modId = "architectury"
 type = "required"
-versionRange = "[10.1.20,)"
+versionRange = "[20.0,)"
 ordering = "AFTER"
 side = "BOTH"
