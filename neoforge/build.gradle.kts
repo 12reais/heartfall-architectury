@@ -29,8 +29,8 @@ repositories {
 
 dependencies {
     neoForge(libs.neoforge)
-    modImplementation(libs.architectury.neoforge)
-    common(project(":common", "namedElements")) { isTransitive = false }
+    implementation(libs.architectury.neoforge)
+    common(project(":common")) { isTransitive = false }
     shadowBundle(project(":common", "transformProductionNeoForge"))
 }
 
@@ -55,11 +55,10 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    configurations = listOf(shadowBundle)
-    archiveClassifier = "dev-shadow"
-}
+    dependsOn(tasks.named("jar"))
+    from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
 
-tasks.remapJar {
-    inputFile = tasks.shadowJar.get().archiveFile
-    dependsOn(tasks.shadowJar)
+    configurations = listOf(shadowBundle)
+    archiveClassifier.set("dev-shadow")
+    from(rootProject.file("LICENSE"))
 }

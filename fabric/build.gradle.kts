@@ -24,10 +24,9 @@ configurations {
 }
 
 dependencies {
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.architectury.fabric)
-    common(project(":common", "namedElements")) { isTransitive = false }
+    api(libs.fabric.loader)
+    implementation(libs.architectury.fabric)
+    common(project(":common")) { isTransitive = false }
     shadowBundle(project(":common", "transformProductionFabric"))
 }
 
@@ -52,11 +51,10 @@ tasks.processResources {
 }
 
 tasks.shadowJar {
-    configurations = listOf(shadowBundle)
-    archiveClassifier = "dev-shadow"
-}
+    dependsOn(tasks.named("jar"))
+    from(zipTree(tasks.named<Jar>("jar").get().archiveFile))
 
-tasks.remapJar {
-    inputFile = tasks.shadowJar.get().archiveFile
-    dependsOn(tasks.shadowJar)
+    configurations = listOf(shadowBundle)
+    archiveClassifier.set("dev-shadow")
+    from(rootProject.file("LICENSE"))
 }
