@@ -64,8 +64,8 @@ public final class Heartfall {
                 entity.getX(), entity.getY(), entity.getZ(),
                 SoundEvents.ITEM_PICKUP,
                 SoundSource.NEUTRAL,
-                10f,
-                .75f
+                1.25f,
+                0.9f + entity.getRandom().nextFloat() * 0.2f
         );
 
         return EventResult.pass();

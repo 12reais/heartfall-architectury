@@ -203,8 +203,8 @@ public class AbsorbableHealthEntity extends Entity {
                 player.getX(), player.getY(), player.getZ(),
                 SoundEvents.BUBBLE_POP,
                 SoundSource.PLAYERS,
-                10f,
-                1f
+                .825f,
+                1.1f + (getHeal() / MAX_HEAL) * .3f
         );
         setDeathTicks(DEATH_ANIMATION_TICKS);
     }
