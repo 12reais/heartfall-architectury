@@ -23,8 +23,8 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
             HEART_FULL = Identifier.withDefaultNamespace("textures/gui/sprites/hud/heart/full.png");
 
     private static final RenderType
-            CONTAINER_LAYER = RenderTypes.entityTranslucentCullItemTarget(CONTAINER),
-            HEART_LAYER = RenderTypes.entityTranslucentCullItemTarget(HEART_FULL);
+            CONTAINER_LAYER = RenderTypes.itemTranslucent(CONTAINER),
+            HEART_LAYER = RenderTypes.itemTranslucent(HEART_FULL);
 
     public AbsorbableHealthEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
