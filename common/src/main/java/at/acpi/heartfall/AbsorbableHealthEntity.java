@@ -28,12 +28,18 @@ public class AbsorbableHealthEntity extends Entity {
             SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_DEATH_TICKS =
             SynchedEntityData.defineId(AbsorbableHealthEntity.class, EntityDataSerializers.INT);
+
     private static final double GRAVITY = 0.075,
             DAMPING = 0.9,
             ATTRACTION_BLEND = 0.25,
             MOTION_DAMP = 0.75;
+
     private static final int DEATH_ANIMATION_TICKS = 10,
             LIFESPAN_TICKS = 16 * 20;
+
+    private static final double SPAWN_HORIZONTAL_SPREAD = 0.3,
+            SPAWN_VERTICAL_BASE = 0.2,
+            SPAWN_VERTICAL_SPREAD = 0.2;
 
     private double spawnY;
 
@@ -49,9 +55,9 @@ public class AbsorbableHealthEntity extends Entity {
         setYRot(this.random.nextFloat() * 360f);
         this.invulnerableTime = 0;
 
-        double vx = (this.random.nextDouble() - 0.5) * 0.2;
-        double vy = 0.175 + this.random.nextDouble() * 0.25;
-        double vz = (this.random.nextDouble() - 0.5) * 0.2;
+        double vx = (this.random.nextDouble() - 0.5) * SPAWN_HORIZONTAL_SPREAD;
+        double vy = SPAWN_VERTICAL_BASE + this.random.nextDouble() * SPAWN_VERTICAL_SPREAD;
+        double vz = (this.random.nextDouble() - 0.5) * SPAWN_HORIZONTAL_SPREAD;
 
         this.setDeltaMovement(vx, vy, vz);
         this.spawnY = this.getY();

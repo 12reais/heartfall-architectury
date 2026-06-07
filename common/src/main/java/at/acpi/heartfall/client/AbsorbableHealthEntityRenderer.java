@@ -26,6 +26,25 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
             CONTAINER_LAYER = RenderTypes.itemTranslucent(CONTAINER),
             HEART_LAYER = RenderTypes.itemTranslucent(HEART_FULL);
 
+    private static final float
+            BOB_PRIMARY_PERIOD    = 8.0f,
+            BOB_PRIMARY_AMP       = 0.08f,
+            BOB_SECONDARY_PERIOD  = 5.3f,
+            BOB_SECONDARY_AMP     = 0.03f,
+            BOB_BASE              = 0.5f,
+            ROTATION_PERIOD       = 25.0f,
+            SCALE_BASE            = 0.5f,
+            SCALE_PRIMARY_FREQ    = 0.18f,
+            SCALE_PRIMARY_AMP     = 0.03f,
+            SCALE_SECONDARY_FREQ  = 0.31f,
+            SCALE_SECONDARY_AMP   = 0.015f,
+            PULSE_BASE            = 0.85f,
+            PULSE_FREQ            = 0.22f,
+            PULSE_AMP             = 0.08f,
+            AGE_FADE_START_TICKS  = 200f,
+            AGE_FADE_DURATION     = 120f,
+            ALPHA_MAX             = 230f;
+
     public AbsorbableHealthEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
@@ -44,17 +63,21 @@ public class AbsorbableHealthEntityRenderer extends EntityRenderer<AbsorbableHea
         super.extractRenderState(entity, state, partialTicks);
         float delta = entity.tickCount + partialTicks;
 
-        float bob = (float) Math.sin(delta / 10.0 + 0.5) * 0.1f;
+        float bob = (float)(Math.sin(delta / BOB_PRIMARY_PERIOD) * BOB_PRIMARY_AMP
+                + Math.sin(delta / BOB_SECONDARY_PERIOD) * BOB_SECONDARY_AMP);
         float deathProgress = entity.getDeathProgress(partialTicks);
 
-        state.rotation = delta / 20.0f;
-        state.scale = 0.5f + (float) Math.sin(delta * 0.25f) * 0.05f;
-        state.bob = .5f + bob;
+        state.rotation = delta / ROTATION_PERIOD;
+        state.scale    = SCALE_BASE
+                + (float) Math.sin(delta * SCALE_PRIMARY_FREQ) * SCALE_PRIMARY_AMP
+                + (float) Math.sin(delta * SCALE_SECONDARY_FREQ) * SCALE_SECONDARY_AMP;
+        state.bob      = BOB_BASE + bob;
 
-        float pulse = 0.75f + (float) Math.sin(delta * 0.25f) * 0.1f;
-        float ageFade = 1.0f - Math.max(0, entity.tickCount - 220) / 100.0f;
+        float pulse    = PULSE_BASE + (float) Math.sin(delta * PULSE_FREQ) * PULSE_AMP;
+        float ageFade  = 1.0f - Math.max(0f, (entity.tickCount - AGE_FADE_START_TICKS) / AGE_FADE_DURATION);
+        float deathFade = deathProgress > 0f ? (float) Math.pow(1f - deathProgress, 2f) : 1f;
 
-        state.alpha = (int) (pulse * ageFade * (1f - deathProgress) * 225f);
+        state.alpha = (int)(pulse * ageFade * deathFade * ALPHA_MAX);
     }
 
     @Override
