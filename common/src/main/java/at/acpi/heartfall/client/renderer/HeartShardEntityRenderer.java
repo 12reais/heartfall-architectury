@@ -1,15 +1,12 @@
-package at.acpi.heartfall.client;
+package at.acpi.heartfall.client.renderer;
 
 import at.acpi.heartfall.entity.HeartShardEntity;
-import at.acpi.heartfall.registry.HeartfallEntities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -19,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
 
-public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, HeartShardEntityRenderer.AbsorbableHealthEntityRenderState> {
+public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, HeartShardEntityRenderState> {
     private static final Identifier
             CONTAINER = Identifier.withDefaultNamespace("textures/gui/sprites/hud/heart/container.png"),
             HEART_FULL = Identifier.withDefaultNamespace("textures/gui/sprites/hud/heart/full.png");
@@ -34,7 +31,6 @@ public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, H
             BOB_SECONDARY_PERIOD = 5.3f,
             BOB_SECONDARY_AMP = 0.03f,
             BOB_BASE = 0.5f,
-            ROTATION_PERIOD = 25.0f,
             SCALE_BASE = 0.5f,
             SCALE_PRIMARY_FREQ = 0.18f,
             SCALE_PRIMARY_AMP = 0.03f,
@@ -45,23 +41,26 @@ public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, H
             PULSE_AMP = 0.08f,
             AGE_FADE_START_TICKS = 200f,
             AGE_FADE_DURATION = 120f,
-            ALPHA_MAX = 230f;
-
+            ROTATION_PERIOD = 32f;
     public HeartShardEntityRenderer(EntityRendererProvider.Context ctx) {
         super(ctx);
     }
 
-    private static void produceVertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, float z, int alpha, float u, float v) {
-        consumer.addVertex(pose, x, y, z).setColor(255, 255, 255, alpha).setUv(u, v).setOverlay(0).setLight(LightCoordsUtil.FULL_BRIGHT).setNormal(pose, 0f, 1f, 0f);
+    private static void produceVertex(VertexConsumer consumer, PoseStack.Pose pose, float x, float y, float z, int alpha, float u, float v, float nz) {
+        consumer.addVertex(pose, x, y, z).setColor(255, 255, 255, alpha)
+                .setUv(u, v).setOverlay(0).setLight(LightCoordsUtil.FULL_BRIGHT)
+                .setNormal(pose, (float) 0.0, (float) 0.0, nz);
     }
 
     @Override
-    public @NotNull AbsorbableHealthEntityRenderState createRenderState() {
-        return new AbsorbableHealthEntityRenderState();
+    public @NotNull HeartShardEntityRenderState createRenderState() {
+        return new HeartShardEntityRenderState();
     }
 
     @Override
-    public void extractRenderState(@NonNull HeartShardEntity entity, @NonNull AbsorbableHealthEntityRenderState state, float partialTicks) {
+    public void extractRenderState(
+            @NonNull HeartShardEntity entity, @NonNull HeartShardEntityRenderState state, float partialTicks
+    ) {
         super.extractRenderState(entity, state, partialTicks);
         float delta = entity.tickCount + partialTicks;
 
@@ -79,46 +78,44 @@ public class HeartShardEntityRenderer extends EntityRenderer<HeartShardEntity, H
         float ageFade = 1.0f - Math.max(0f, (entity.tickCount - AGE_FADE_START_TICKS) / AGE_FADE_DURATION);
         float deathFade = deathProgress > 0f ? (float) Math.pow(1f - deathProgress, 2f) : 1f;
 
-        state.alpha = (int) (pulse * ageFade * deathFade * ALPHA_MAX);
+        state.alpha = (int) (pulse * ageFade * deathFade * 255f);
     }
 
+
     @Override
-    public void submit(AbsorbableHealthEntityRenderState state, PoseStack stack, @NonNull SubmitNodeCollector collector, @NonNull CameraRenderState camera) {
+    public void submit(
+            HeartShardEntityRenderState state, @NonNull PoseStack stack, @NonNull SubmitNodeCollector collector,
+            @NonNull CameraRenderState camera
+    ) {
+        if (state.alpha <= 0) return;
+
         stack.pushPose();
-
         stack.translate(0, state.bob, 0);
-        stack.scale(state.scale, state.scale, state.scale);
+        stack.mulPose(camera.viewRotationMatrix);
         stack.mulPose(Axis.YP.rotation(state.rotation));
+        stack.scale(state.scale, state.scale, state.scale);
 
-        drawQuad(stack, collector, HEART_LAYER, state.alpha, 0f);
-        drawQuad(stack, collector, CONTAINER_LAYER, state.alpha, -0.001f);
-        drawQuad(stack, collector, HEART_LAYER, state.alpha, -0.002f);
+        collector.submitCustomGeometry(stack, HEART_LAYER, (pose, consumer) -> {
+            drawPlane(consumer, pose, 0, state.alpha);
+            drawPlane(consumer, pose, -0.002f, state.alpha);
+        });
+        collector.submitCustomGeometry(stack, CONTAINER_LAYER, (pose, consumer) -> {
+            drawPlane(consumer, pose, -0.001f, state.alpha);
+        });
 
         stack.popPose();
         super.submit(state, stack, collector, camera);
     }
 
-    private void drawQuad(PoseStack matrices, SubmitNodeCollector collector, RenderType layer, int alpha, float zOffset) {
-        collector.submitCustomGeometry(matrices, layer, (pose, consumer) -> {
-            produceVertex(consumer, pose, -0.5f, -0.5f, zOffset, alpha, 0f, 1f);
-            produceVertex(consumer, pose, 0.5f, -0.5f, zOffset, alpha, 1f, 1f);
-            produceVertex(consumer, pose, 0.5f, 0.5f, zOffset, alpha, 1f, 0f);
-            produceVertex(consumer, pose, -0.5f, 0.5f, zOffset, alpha, 0f, 0f);
+    private void drawPlane(VertexConsumer consumer, PoseStack.Pose pose, float z, int alpha) {
+        produceVertex(consumer, pose, (float) -0.5, (float) -0.5, z, alpha, 0f, 1f, -1f);
+        produceVertex(consumer, pose, (float) 0.5, (float) -0.5, z, alpha, 1f, 1f, -1f);
+        produceVertex(consumer, pose, (float) 0.5, (float) 0.5, z, alpha, 1f, 0f, -1f);
+        produceVertex(consumer, pose, (float) -0.5, (float) 0.5, z, alpha, 0f, 0f, -1f);
 
-            produceVertex(consumer, pose, -0.5f, 0.5f, zOffset, alpha, 0f, 0f);
-            produceVertex(consumer, pose, 0.5f, 0.5f, zOffset, alpha, 1f, 0f);
-            produceVertex(consumer, pose, 0.5f, -0.5f, zOffset, alpha, 1f, 1f);
-            produceVertex(consumer, pose, -0.5f, -0.5f, zOffset, alpha, 0f, 1f);
-        });
-    }
-
-
-    public static class AbsorbableHealthEntityRenderState extends EntityRenderState {
-        public float scale, rotation, bob;
-        public int alpha;
-    }
-
-    public static void register() {
-        EntityRendererRegistry.register(HeartfallEntities.HEARD_SHARD, HeartShardEntityRenderer::new);
+        produceVertex(consumer, pose, (float) -0.5, (float) 0.5, z, alpha, 0f, 0f, 1f);
+        produceVertex(consumer, pose, (float) 0.5, (float) 0.5, z, alpha, 1f, 0f, 1f);
+        produceVertex(consumer, pose, (float) 0.5, (float) -0.5, z, alpha, 1f, 1f, 1f);
+        produceVertex(consumer, pose, (float) -0.5, (float) -0.5, z, alpha, 0f, 1f, 1f);
     }
 }

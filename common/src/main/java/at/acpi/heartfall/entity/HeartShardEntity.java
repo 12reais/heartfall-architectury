@@ -23,7 +23,7 @@ public class HeartShardEntity extends Entity {
     public static final double PICKUP_RANGE = 1.25;
 
     private static final int DEATH_ANIMATION_TICKS = 10;
-    private static final int LIFESPAN_TICKS = 16 * 20;
+    private static final int LIFESPAN_TICKS = 32 * 20;
 
     private static final double SPAWN_HORIZONTAL_SPREAD = 0.3;
     private static final double SPAWN_VERTICAL_BASE = 0.2;
@@ -165,7 +165,7 @@ public class HeartShardEntity extends Entity {
     }
 
     private boolean cannotAttractTo(Player player) {
-        return player.isSpectator() || (!player.isCreative() && !(player.getHealth() < player.getMaxHealth()));
+        return player.isSpectator() || (!player.isCreative() && player.getHealth() >= player.getMaxHealth());
     }
 
     private boolean attemptPickup(Player player) {

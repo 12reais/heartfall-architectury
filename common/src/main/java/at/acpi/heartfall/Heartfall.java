@@ -18,7 +18,7 @@ public final class Heartfall {
     public static final String MOD_ID = "heartfall";
 
     public static void init() {
-        HeartfallEntities.register();
+        HeartfallEntities.registerEntities();
         EntityEvent.LIVING_DEATH.register(Heartfall::onLivingDeath);
     }
 
