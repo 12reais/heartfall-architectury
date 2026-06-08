@@ -1,5 +1,6 @@
 package at.acpi.heartfall;
 
+import at.acpi.heartfall.config.HeartfallConfig;
 import at.acpi.heartfall.entity.HeartShardEntity;
 import at.acpi.heartfall.entity.HeartShardSpawnUtils;
 import at.acpi.heartfall.registry.HeartfallEntities;
@@ -18,6 +19,7 @@ public final class Heartfall {
     public static final String MOD_ID = "heartfall";
 
     public static void init() {
+        HeartfallConfig.load();
         HeartfallEntities.registerEntities();
         EntityEvent.LIVING_DEATH.register(Heartfall::onLivingDeath);
     }

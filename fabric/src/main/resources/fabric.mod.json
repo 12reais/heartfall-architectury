@@ -20,12 +20,19 @@
     ],
     "client": [
       "at.acpi.heartfall.fabric.client.HeartfallFabricClient"
+    ],
+    "modmenu": [
+      "at.acpi.heartfall.fabric.config.ModMenuIntegration"
     ]
   },
   "depends": {
     "fabricloader": ">=0.17.0",
     "minecraft": ">=26.1",
     "java": ">=25",
-    "architectury": ">=20.0.2"
+    "architectury": ">=20.0.2",
+    "yet_another_config_lib_v3": ">=3.9"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }

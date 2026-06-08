@@ -1,5 +1,6 @@
 package at.acpi.heartfall.entity;
 
+import at.acpi.heartfall.config.HeartfallConfig;
 import at.acpi.heartfall.sound.HeartfallSounds;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -18,13 +19,6 @@ import org.jspecify.annotations.NonNull;
 
 @SuppressWarnings("resource")
 public class HeartShardEntity extends Entity {
-    public static final float MIN_HEAL = 1.5f;
-    public static final float MAX_HEAL = 5f;
-    public static final double PICKUP_RANGE = 1.25;
-
-    private static final int DEATH_ANIMATION_TICKS = 10;
-    private static final int LIFESPAN_TICKS = 32 * 20;
-
     private static final double SPAWN_HORIZONTAL_SPREAD = 0.3;
     private static final double SPAWN_VERTICAL_BASE = 0.2;
     private static final double SPAWN_VERTICAL_SPREAD = 0.2;
@@ -42,7 +36,9 @@ public class HeartShardEntity extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_HEAL, MIN_HEAL + random.nextFloat() * (MAX_HEAL - MIN_HEAL));
+        var config = HeartfallConfig.get();
+
+        builder.define(DATA_HEAL, config.minHeal + random.nextFloat() * (config.maxHeal - config.minHeal));
         builder.define(DATA_DEATH_TICKS, 0);
 
         setYRot(random.nextFloat() * 360f);
@@ -79,7 +75,7 @@ public class HeartShardEntity extends Entity {
 
     public float getDeathProgress(float partialTicks) {
         if (!isDying()) return 0f;
-        return 1f - (getDeathTicks() + partialTicks) / (float) DEATH_ANIMATION_TICKS;
+        return 1f - (getDeathTicks() + partialTicks) / (float) HeartfallConfig.get().deathAnimationTicks;
     }
 
     @Override
@@ -110,7 +106,7 @@ public class HeartShardEntity extends Entity {
         if (handleDeathAnimation()) return;
         if (handleLifespan()) return;
         if (isInsideBlock()) {
-            setDeathTicks(DEATH_ANIMATION_TICKS);
+            setDeathTicks(HeartfallConfig.get().deathAnimationTicks);
             return;
         }
 
@@ -140,7 +136,7 @@ public class HeartShardEntity extends Entity {
 
         Player nearest = level().getNearestPlayer(this, HeartShardPhysics.ATTRACTION_RANGE);
         if (nearest != null) {
-            double progress = 1.0 - ticks / (double) DEATH_ANIMATION_TICKS;
+            double progress = 1.0 - ticks / (double) HeartfallConfig.get().deathAnimationTicks;
             Vec3 current = position();
             Vec3 target = nearest.position().add(0, nearest.getBbHeight() * 0.25, 0);
             setPos(
@@ -155,8 +151,10 @@ public class HeartShardEntity extends Entity {
     }
 
     private boolean handleLifespan() {
-        if (tickCount < LIFESPAN_TICKS) return false;
-        setDeathTicks(DEATH_ANIMATION_TICKS);
+        var config = HeartfallConfig.get();
+
+        if (tickCount < config.lifespanTicks) return false;
+        setDeathTicks(config.deathAnimationTicks);
         return true;
     }
 
@@ -169,11 +167,13 @@ public class HeartShardEntity extends Entity {
     }
 
     private boolean attemptPickup(Player player) {
-        if (level().isClientSide() || distanceTo(player) >= PICKUP_RANGE) return false;
+        var config = HeartfallConfig.get();
+
+        if (level().isClientSide() || distanceTo(player) >= config.pickupRange) return false;
         if (cannotAttractTo(player)) return false;
         player.setHealth(Math.min(player.getHealth() + getHeal(), player.getMaxHealth()));
-        HeartfallSounds.playPickup(player, getHeal(), MAX_HEAL);
-        setDeathTicks(DEATH_ANIMATION_TICKS);
+        HeartfallSounds.playPickup(player, getHeal(), config.maxHeal);
+        setDeathTicks(config.deathAnimationTicks);
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package at.acpi.heartfall.entity;
 
+import at.acpi.heartfall.config.HeartfallConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -8,9 +9,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class HeartShardSpawnUtils {
-    private static final float BASE_DROP_CHANCE = 0.175f;
-    private static final float MAX_DROP_CHANCE = 0.49f;
-
     private static final Vec3[] OFFSETS = {
             new Vec3(0, 0, 0),
             new Vec3(0, 1, 0),
@@ -25,10 +23,12 @@ public class HeartShardSpawnUtils {
     }
 
     public static boolean shouldDrop(DamageSource src, RandomSource random) {
-        float chance = BASE_DROP_CHANCE;
+        HeartfallConfig config = HeartfallConfig.get();
+        float chance = config.baseDropChance;
+
         if (!src.isCreativePlayer() && src.getEntity() instanceof LivingEntity damager) {
             float healthFraction = damager.getHealth() / damager.getMaxHealth();
-            chance = BASE_DROP_CHANCE + (MAX_DROP_CHANCE - BASE_DROP_CHANCE) * (1f - healthFraction);
+            chance = config.baseDropChance + (config.maxDropChance - config.baseDropChance) * (1f - healthFraction);
         }
         return random.nextFloat() < chance;
     }

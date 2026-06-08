@@ -26,6 +26,8 @@ configurations {
 dependencies {
     api(libs.fabric.loader)
     implementation(libs.architectury.fabric)
+    implementation(libs.yacl.fabric)
+    implementation(libs.modmenu)
     common(project(":common")) { isTransitive = false }
     shadowBundle(project(":common", "transformProductionFabric"))
 }

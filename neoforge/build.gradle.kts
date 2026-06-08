@@ -30,6 +30,7 @@ repositories {
 dependencies {
     neoForge(libs.neoforge)
     implementation(libs.architectury.neoforge)
+    implementation(libs.yacl.neoforge)
     common(project(":common")) { isTransitive = false }
     shadowBundle(project(":common", "transformProductionNeoForge"))
 }
