@@ -17,12 +17,12 @@ fun Project.configureNeoForgeEnvironment() {
 			}
 		}
 
-		val parchmentProp = stonecutterOptional("deps.parchment").value
+		val parchmentProp = findContextualisedProperty("deps", "parchment", loader = "neoforge")
 		if (parchmentProp != null) {
 			val (mc, ver) = parchmentProp.split(':')
 			"parchment" {
-				"mappingsVersion"(ver)
-				"minecraftVersion"(mc)
+				setProperty("mappingsVersion", ver)
+				setProperty("minecraftVersion", mc)
 			}
 		}
 	}
