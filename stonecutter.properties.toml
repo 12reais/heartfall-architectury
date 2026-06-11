@@ -1,13 +1,13 @@
 mod.id = "heartfall"
 mod.name = "heartfall"
 mod.group = "at.acpi"
-mod.version = "0.3.0"
+mod.version = "0.3.1"
 mod.description = "Hostile mobs have a chance to drop floating heart shards that heal you"
 mod.authors = ["adoravel"]
 mod.contributors = []
 mod.inception_year = "2026"
-mod.license.name = "LGPL-3.0-only"
-mod.license.url = "https://spdx.org/licenses/LGPL-3.0-only.html"
+mod.license.name = "MIT"
+mod.license.url = "https://spdx.org/licenses/MIT.html"
 mod.license.dist = "repo"
 mod.sources_url = "https://github.com/adoravel/heartfall"
 mod.homepage_url = "https://github.com/adoravel/heartfall"
@@ -48,6 +48,7 @@ publish.additionalVersions = ["26.1.1", "26.1"]
 deps.minecraft = "1.21.11"
 deps.neoforge = "21.11.42"
 deps.yacl = "3.8.1+1.21.11-neoforge"
+deps.parchment = "1.21.11:2025.12.20"
 
 [neoforge."26.1.2"]
 deps.minecraft = "26.1.2"
