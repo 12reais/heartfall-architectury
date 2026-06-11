@@ -71,7 +71,7 @@ fun Project.configureModPublishing(ctx: Context) {
 	extensions.configure<ModPublishExtension>("publishMods") {
 		val isMrStaging = envFlag("PUB_MODRINTH_STAGING")
 
-		if (envFlag("PUB_DRY_RUN") || envFlag("PUB_MODS_ENABLE")) {
+		if (envFlag("PUB_DRY_RUN") || !envFlag("PUB_MODS_ENABLE")) {
 			dryRun = true
 		}
 
@@ -87,9 +87,12 @@ fun Project.configureModPublishing(ctx: Context) {
 		changelog.set(rootProject.file("CHANGELOG.md").readText())
 		displayName = "${ctx.modName} ${ctx.basicVersion} ${ctx.loader.id.replaceFirstChar { it.titlecase() }} ${ctx.currentMinecraftVersion}"
 
+		modLoaders.add(ctx.loader.id)
+		if(ctx.loader.id == FabricManifestGenerator.ID)
+			modLoaders.add("quilt")
+
 		val deps = ctx.extension.dependencies
 		modrinth(ctx, ctx.publishAdditionalVersions, isMrStaging, envVar("PUB_MODRINTH_TOKEN"), deps)
-		if (!isMrStaging) curseforge(ctx, ctx.publishAdditionalVersions, envVar("PUB_CURSEFORGE_TOKEN"), deps)
 	}
 }
 
@@ -128,21 +131,4 @@ private fun ModPublishExtension.modrinth(
 			embedsAction = { embeds(it) }
 		)
 	}
-}
-
-private fun ModPublishExtension.curseforge(
-	ctx: Context, additionalVersions: List<String>, accessToken: String?, deps: DependenciesConfig
-) = curseforge {
-	projectId = project.envVar("PUB_CURSEFORGE_PROJECT_ID")
-	this.accessToken = accessToken
-
-	minecraftVersions.addAll(listOf(ctx.currentMinecraftVersion) + additionalVersions)
-
-	deps.applyToPlatform(
-		slugExtractor = { it.curseforge },
-		requiredAction = { requires(it) },
-		optionalAction = { optional(it) },
-		incompatibleAction = { incompatible(it) },
-		embedsAction = { embeds(it) }
-	)
 }
