@@ -1,0 +1,18 @@
+{
+  "text.heartfall.config.title": "Opções do Heartfall",
+  "text.heartfall.config.category.general": "Configurações Gerais",
+  "text.heartfall.config.option.minHeal": "Cura Mínima do Fragmento",
+  "text.heartfall.config.option.minHeal.desc": "A quantidade mínima de vida que um único fragmento de vida pode restaurar.",
+  "text.heartfall.config.option.maxHeal": "Cura Máxima do Fragmento",
+  "text.heartfall.config.option.maxHeal.desc": "A quantidade máxima de vida que um único fragmento de vida pode restaurar.",
+  "text.heartfall.config.option.pickupRange": "Alcance de Coleta",
+  "text.heartfall.config.option.pickupRange.desc": "O raio em blocos ao redor do jogador no qual os fragmentos de vida são atraídos.",
+  "text.heartfall.config.option.deathAnimationTicks": "Duração da Animação de Morte",
+  "text.heartfall.config.option.deathAnimationTicks.desc": "Duração da animação de redução/desaparecimento quando um fragmento é coletado (em ticks de jogo).",
+  "text.heartfall.config.option.lifespanTicks": "Tempo de Vida do Fragmento (Ticks)",
+  "text.heartfall.config.option.lifespanTicks.desc": "Tempo total que um fragmento de vida permanece no chão antes de sumir (em ticks de jogo).",
+  "text.heartfall.config.option.baseDropChance": "Chance Base de Queda",
+  "text.heartfall.config.option.baseDropChance.desc": "A probabilidade padrão de queda quando uma criatura hostível morre.",
+  "text.heartfall.config.option.maxDropChance": "Chance Máxima de Queda",
+  "text.heartfall.config.option.maxDropChance.desc": "A maior probabilidade de queda possível, calculada proporcionalmente com base em quão baixa está a vida atual do jogador."
+}
