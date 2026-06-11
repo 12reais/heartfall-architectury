@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., 1.0.0-beta)'
+        type: string
+        required: true
 
 permissions:
   contents: write
@@ -14,13 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
+      - name: Set Tag Reference
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "GITHUB_REF_NAME=${{ inputs.tag }}" >> "$GITHUB_ENV"
+            echo "Manually triggered. Using tag: ${{ inputs.tag }}"
+          else
+            echo "Push triggered. Using tag: ${GITHUB_REF_NAME}"
+          fi
       - name: Validate tag matches version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
