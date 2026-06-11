@@ -1,27 +1,36 @@
 [versions]
-minecraft = "26.1.2"
-architectury-api = "20.0.5"
-fabric-loader = "0.19.3"
-neoforge = "26.1.2.74"
-loom-plugin = "1.14-SNAPSHOT"
-architectury-plugin = "3.5-SNAPSHOT"
-shadow-plugin = "9.4.2"
-yacl-fabric = "3.9.4+26.1-fabric"
-yacl-neoforge = "3.9.4+26.1-neoforge"
-modmenu = "18.0.0-beta.1"
+stonecutter = "0.9.5"
+stonecutter-postprocess = "2.1-beta.8"
+mod-publish = "2.0.0"
+dotenv-gradle = "4.0.0"
+loom-back-compat = "0.3"
+neoforge-moddev = "2.0.141"
+foojay = "1.0.0"
+devtools-ksp = "2.3.9"
+kotlin-jvm = "2.4.0"
+fletching-table = "0.1.0-alpha.23"
+vanniktech-maven-publish = "0.36.0"
+serialization-json = "1.7.3"
+serialization-toml = "0.6.0"
 
 [libraries]
-minecraft = { module = "net.minecraft:minecraft", version.ref = "minecraft" }
-fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
-architectury = { module = "dev.architectury:architectury", version.ref = "architectury-api" }
-architectury-fabric = { module = "dev.architectury:architectury-fabric", version.ref = "architectury-api" }
-architectury-neoforge = { module = "dev.architectury:architectury-neoforge", version.ref = "architectury-api" }
-neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
-yacl-fabric = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl-fabric" }
-yacl-neoforge = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl-neoforge" }
-modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
+kikugie-postprocess = { module = "dev.kikugie:postprocess", version.ref = "stonecutter-postprocess" }
+mod-publish-plugin = { module = "me.modmuss50:mod-publish-plugin", version.ref = "mod-publish" }
+kikugie-stonecutter = { module = "dev.kikugie:stonecutter", version.ref = "stonecutter" }
+foojay-resolver = { module = "org.gradle.toolchains:foojay-resolver", version.ref = "foojay" }
+fletching-table = { module = "dev.kikugie:fletching-table", version.ref = "fletching-table" }
+vanniktech-maven-publish = { module = "com.vanniktech.maven.publish:com.vanniktech.maven.publish.gradle.plugin", version.ref = "vanniktech-maven-publish" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json" }
+serialization-toml = { module = "dev.eav.tomlkt:tomlkt", version.ref = "serialization-toml" }
 
 [plugins]
-loom = { id = "dev.architectury.loom-no-remap", version.ref = "loom-plugin" }
-architectury = { id = "architectury-plugin", version.ref = "architectury-plugin" }
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow-plugin" }
+stonecutter = { id = "dev.kikugie.stonecutter", version.ref = "stonecutter" }
+dotenv = { id = "co.uzzu.dotenv.gradle", version.ref = "dotenv-gradle" }
+loom-back-compat = { id = "dev.kikugie.loom-back-compat", version.ref = "loom-back-compat" }
+neoforged-moddev = { id = "net.neoforged.moddev", version.ref = "neoforge-moddev" }
+jsonlang-postprocess = { id = "dev.kikugie.postprocess.jsonlang", version.ref = "stonecutter-postprocess" }
+mod-publish-plugin = { id = "me.modmuss50.mod-publish-plugin", version.ref = "mod-publish" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "devtools-ksp" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-jvm" }
+fletching-table = { id = "dev.kikugie.fletching-table", version.ref = "fletching-table" }
+legacyforge-moddev = { id = "net.neoforged.moddev.legacyforge", version.ref = "neoforge-moddev" }
