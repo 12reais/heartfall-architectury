@@ -16,6 +16,14 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class HeartfallConfig {
+	private static final float DEFAULT_MIN_HEAL = 1.5f;
+	private static final float DEFAULT_MAX_HEAL = 5.0f;
+	private static final double DEFAULT_PICKUP_RANGE = 1.5;
+	private static final int DEFAULT_DEATH_ANIMATION_TICKS = 10;
+	private static final int DEFAULT_LIFESPAN_TICKS = 6000;
+	private static final float DEFAULT_BASE_DROP_CHANCE = .125f;
+	private static final float DEFAULT_MAX_DROP_CHANCE = .5f;
+
 	public static final ConfigClassHandler<HeartfallConfig> HANDLER = ConfigClassHandler.createBuilder(HeartfallConfig.class)
 			.id(Heartfall.of("config"))
 			.serializer(config -> GsonConfigSerializerBuilder.create(config)
@@ -24,25 +32,25 @@ public class HeartfallConfig {
 			.build();
 
 	@SerialEntry
-	public float minHeal = 1.5f;
+	public float minHeal = DEFAULT_MIN_HEAL;
 
 	@SerialEntry
-	public float maxHeal = 5.0f;
+	public float maxHeal = DEFAULT_MAX_HEAL;
 
 	@SerialEntry
-	public double pickupRange = 1.5;
+	public double pickupRange = DEFAULT_PICKUP_RANGE;
 
 	@SerialEntry
-	public int deathAnimationTicks = 10;
+	public int deathAnimationTicks = DEFAULT_DEATH_ANIMATION_TICKS;
 
 	@SerialEntry
-	public int lifespanTicks = 32 * 20;
+	public int lifespanTicks = DEFAULT_LIFESPAN_TICKS;
 
 	@SerialEntry
-	public float baseDropChance = .125f;
+	public float baseDropChance = DEFAULT_BASE_DROP_CHANCE;
 
 	@SerialEntry
-	public float maxDropChance = .5f;
+	public float maxDropChance = DEFAULT_MAX_DROP_CHANCE;
 
 	public static HeartfallConfig get() {
 		return HANDLER.instance();
@@ -60,43 +68,43 @@ public class HeartfallConfig {
 						.option(Option.<Float>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.minHeal"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.minHeal.desc")))
-								.binding(1.5f, () -> get().minHeal, val -> get().minHeal = val)
+								.binding(DEFAULT_MIN_HEAL, () -> get().minHeal, val -> get().minHeal = val)
 								.controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.0f, 20.0f).step(0.5f))
 								.build())
 						.option(Option.<Float>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.maxHeal"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.maxHeal.desc")))
-								.binding(5.0f, () -> get().maxHeal, val -> get().maxHeal = val)
+								.binding(DEFAULT_MAX_HEAL, () -> get().maxHeal, val -> get().maxHeal = val)
 								.controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.0f, 40.0f).step(0.5f))
 								.build())
 						.option(Option.<Double>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.pickupRange"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.pickupRange.desc")))
-								.binding(1.25, () -> get().pickupRange, val -> get().pickupRange = val)
+								.binding(DEFAULT_PICKUP_RANGE, () -> get().pickupRange, val -> get().pickupRange = val)
 								.controller(opt -> DoubleSliderControllerBuilder.create(opt).range(0.5, 5.0).step(0.25))
 								.build())
 						.option(Option.<Integer>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.deathAnimationTicks"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.deathAnimationTicks.desc")))
-								.binding(10, () -> get().deathAnimationTicks, val -> get().deathAnimationTicks = val)
+								.binding(DEFAULT_DEATH_ANIMATION_TICKS, () -> get().deathAnimationTicks, val -> get().deathAnimationTicks = val)
 								.controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 100).step(1))
 								.build())
 						.option(Option.<Integer>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.lifespanTicks"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.lifespanTicks.desc")))
-								.binding(32 * 20, () -> get().lifespanTicks, val -> get().lifespanTicks = val)
+								.binding(DEFAULT_LIFESPAN_TICKS, () -> get().lifespanTicks, val -> get().lifespanTicks = val)
 								.controller(opt -> IntegerSliderControllerBuilder.create(opt).range(20, 12000).step(20))
 								.build())
 						.option(Option.<Float>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.baseDropChance"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.baseDropChance.desc")))
-								.binding(.125f, () -> get().baseDropChance, val -> get().baseDropChance = val)
+								.binding(DEFAULT_BASE_DROP_CHANCE, () -> get().baseDropChance, val -> get().baseDropChance = val)
 								.controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.0f, 1.0f).step(0.025f))
 								.build())
 						.option(Option.<Float>createBuilder()
 								.name(Component.translatable("text.heartfall.config.option.maxDropChance"))
 								.description(OptionDescription.of(Component.translatable("text.heartfall.config.option.maxDropChance.desc")))
-								.binding(.5f, () -> get().maxDropChance, val -> get().maxDropChance = val)
+								.binding(DEFAULT_MAX_DROP_CHANCE, () -> get().maxDropChance, val -> get().maxDropChance = val)
 								.controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.0f, 1.0f).step(0.025f))
 								.build())
 						.build())
