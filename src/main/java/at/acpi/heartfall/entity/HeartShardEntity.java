@@ -12,10 +12,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+
+//? if <1.21.2 {
+/*import net.minecraft.nbt.CompoundTag;
+*///?} else {
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.NonNull;
+//?}
 
 @SuppressWarnings("resource")
 public class HeartShardEntity extends Entity {
@@ -27,8 +32,6 @@ public class HeartShardEntity extends Entity {
             SynchedEntityData.defineId(HeartShardEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Integer> DATA_DEATH_TICKS =
             SynchedEntityData.defineId(HeartShardEntity.class, EntityDataSerializers.INT);
-
-    private double spawnY;
 
     public HeartShardEntity(EntityType<? extends HeartShardEntity> type, Level level) {
         super(type, level);
@@ -49,7 +52,6 @@ public class HeartShardEntity extends Entity {
                 SPAWN_VERTICAL_BASE + random.nextDouble() * SPAWN_VERTICAL_SPREAD,
                 (random.nextDouble() - 0.5) * SPAWN_HORIZONTAL_SPREAD
         );
-        spawnY = getY();
     }
 
     public float getHeal() {
@@ -78,6 +80,24 @@ public class HeartShardEntity extends Entity {
         return 1f - (getDeathTicks() + partialTicks) / (float) HeartfallConfig.get().deathAnimationTicks;
     }
 
+    //? if <1.21.2 {
+    /*@Override
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        setHeal(tag.contains("heal") ? tag.getFloat("heal") : 3f);
+        setDeathTicks(tag.getInt("deathTicks"));
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        tag.putFloat("heal", getHeal());
+        tag.putInt("deathTicks", getDeathTicks());
+    }
+
+    @Override
+    public boolean hurt(DamageSource src, float amount) {
+        return false;
+    }
+    *///?} else {
     @Override
     protected void readAdditionalSaveData(ValueInput tag) {
         setHeal(tag.getFloatOr("heal", 3f));
@@ -94,6 +114,7 @@ public class HeartShardEntity extends Entity {
     public boolean hurtServer(@NonNull ServerLevel level, @NonNull DamageSource src, float amount) {
         return false;
     }
+    //?}
 
     @Override
     public boolean isInvulnerable() {
@@ -115,8 +136,7 @@ public class HeartShardEntity extends Entity {
 
         if (player == null || cannotAttractTo(player)) {
             setNoGravity(false);
-            motion = HeartShardPhysics.applyGravityAndBounce(motion, getY(), spawnY);
-            if (getY() <= spawnY) setPos(getX(), spawnY, getZ());
+            if (!onGround()) motion = HeartShardPhysics.applyGravity(motion);
         } else {
             if (attemptPickup(player)) return;
             setNoGravity(true);
@@ -126,7 +146,9 @@ public class HeartShardEntity extends Entity {
 
         setDeltaMovement(motion);
         move(MoverType.SELF, getDeltaMovement());
-        setDeltaMovement(getDeltaMovement().scale(HeartShardPhysics.DAMPING));
+
+        Vec3 settled = onGround() ? getDeltaMovement().multiply(1, 0, 1) : getDeltaMovement();
+        setDeltaMovement(settled.scale(HeartShardPhysics.DAMPING));
     }
 
     private boolean handleDeathAnimation() {
@@ -169,10 +191,10 @@ public class HeartShardEntity extends Entity {
     private boolean attemptPickup(Player player) {
         var config = HeartfallConfig.get();
 
-        if (level().isClientSide() || distanceTo(player) >= config.pickupRange) return false;
+        if (!(level() instanceof ServerLevel) || distanceTo(player) >= config.pickupRange) return false;
         if (cannotAttractTo(player)) return false;
         player.setHealth(Math.min(player.getHealth() + getHeal(), player.getMaxHealth()));
-        HeartfallSounds.playPickup(player, getHeal(), config.maxHeal);
+        HeartfallSounds.playPickupSound(player, getHeal(), config.maxHeal);
         setDeathTicks(config.deathAnimationTicks);
         return true;
     }
