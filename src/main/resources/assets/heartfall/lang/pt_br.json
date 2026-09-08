@@ -14,5 +14,6 @@
   "text.heartfall.config.option.baseDropChance": "Chance Base de Queda",
   "text.heartfall.config.option.baseDropChance.desc": "A probabilidade padrão de queda quando uma criatura hostível morre.",
   "text.heartfall.config.option.maxDropChance": "Chance Máxima de Queda",
-  "text.heartfall.config.option.maxDropChance.desc": "A maior probabilidade de queda possível, calculada proporcionalmente com base em quão baixa está a vida atual do jogador."
+  "text.heartfall.config.option.maxDropChance.desc": "A maior probabilidade de queda possível, calculada proporcionalmente com base em quão baixa está a vida atual do jogador.",
+  "subtitle.heartfall.pickup": "Fragmento de coração coletado"
 }

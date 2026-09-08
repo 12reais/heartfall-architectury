@@ -14,5 +14,6 @@
   "text.heartfall.config.option.baseDropChance": "Probabilidad Base de Drop",
   "text.heartfall.config.option.baseDropChance.desc": "La probabilidad de drop por defecto cuando muere una entidad hostil.",
   "text.heartfall.config.option.maxDropChance": "Probabilidad Máxima de Drop",
-  "text.heartfall.config.option.maxDropChance.desc": "La mayor probabilidad de drop posible, escalada según qué tan baja esté la salud actual del jugador."
+  "text.heartfall.config.option.maxDropChance.desc": "La mayor probabilidad de drop posible, escalada según qué tan baja esté la salud actual del jugador.",
+  "subtitle.heartfall.pickup": "Fragmento de corazón recogido"
 }

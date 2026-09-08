@@ -14,5 +14,6 @@
   "text.heartfall.config.option.baseDropChance": "Base Shard Drop Chance",
   "text.heartfall.config.option.baseDropChance.desc": "The default drop probability when a valid living entity dies.",
   "text.heartfall.config.option.maxDropChance": "Maximum Shard Drop Chance",
-  "text.heartfall.config.option.maxDropChance.desc": "The highest possible drop probability, scaled based on how low the player's current health status is."
+  "text.heartfall.config.option.maxDropChance.desc": "The highest possible drop probability, scaled based on how low the player's current health status is.",
+  "subtitle.heartfall.pickup": "Heart shard collected"
 }

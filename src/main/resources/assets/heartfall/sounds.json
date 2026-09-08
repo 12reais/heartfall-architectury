@@ -1,0 +1,8 @@
+{
+  "pickup": {
+    "subtitle": "subtitle.heartfall.pickup",
+    "sounds": [
+      "heartfall:pickup"
+    ]
+  }
+}
