@@ -34,5 +34,5 @@ fun TreeBuilder.supports(vararg versions: String) = versions.forEach {
 }
 
 stonecutter.create(rootProject) {
-	supports("1.21.11", "26.1.2", "26.2")
+	supports("1.21.11", "1.21.1", "26.1.2", "26.2")
 }
