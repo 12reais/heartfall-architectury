@@ -5,16 +5,25 @@ import at.acpi.heartfall.entity.HeartShardEntity;
 import at.acpi.heartfall.entity.HeartShardSpawnUtils;
 import at.acpi.heartfall.registry.HeartfallEntityRegistry;
 import at.acpi.heartfall.sound.HeartfallSounds;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.phys.Vec3;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+//? if <1.21.2 {
+/*import net.minecraft.resources.Identifier;
+*///?} else {
+import net.minecraft.resources.Identifier;
+//?}
 
 public final class Heartfall {
     public static final String MOD_ID = "heartfall";
+
+    public static final Logger LOGGER = LoggerFactory.getLogger("Heartfall");
 
     public static void init() {
         HeartfallConfig.load();
@@ -37,7 +46,13 @@ public final class Heartfall {
 		HeartfallSounds.playSpawn(level, safePos, entity.getRandom());
 	}
 
+    //? if <1.21.2 {
+    /*public static Identifier of(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
+    }
+    *///?} else {
     public static Identifier of(String path) {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
+    //?}
 }
