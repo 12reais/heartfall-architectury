@@ -58,7 +58,11 @@ public final class HeartfallEntityRegistry {
                 .sized(.75f, .75f)
                 .fireImmune()
                 .updateInterval(1)
+                //? if <1.21.2 {
+                /*.build(HeartfallEntityRegistry.HEART_SHARD_KEY.identifier().toString());
+                *///?} else {
                 .build(HeartfallEntityRegistry.HEART_SHARD_KEY);
+                //?}
     }
 
     public static EntityType<HeartShardEntity> heartShard() {
