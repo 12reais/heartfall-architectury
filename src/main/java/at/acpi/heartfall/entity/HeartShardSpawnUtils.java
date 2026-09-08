@@ -26,7 +26,9 @@ public class HeartShardSpawnUtils {
         HeartfallConfig config = HeartfallConfig.get();
         float chance = config.baseDropChance;
 
-        if (!src.isCreativePlayer() && src.getEntity() instanceof LivingEntity damager) {
+        if (src.isCreativePlayer()) {
+            chance = config.maxDropChance;
+        } else if (src.getEntity() instanceof LivingEntity damager) {
             float healthFraction = damager.getHealth() / damager.getMaxHealth();
             chance = config.baseDropChance + (config.maxDropChance - config.baseDropChance) * (1f - healthFraction);
         }
