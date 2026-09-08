@@ -3,7 +3,7 @@ package at.acpi.heartfall.registry;
 import at.acpi.heartfall.renderer.HeartShardEntityRenderer;
 
 //? fabric {
-import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 //? }
 
 //? neoforge {
@@ -20,8 +20,9 @@ public final class HeartfallEntityRendererRegistry {
 	}
 
 	//? fabric {
+	@SuppressWarnings("deprecation")
 	public static void registerEntityRenderers() {
-		EntityRenderers.register(HeartfallEntityRegistry.heartShard(), HeartShardEntityRenderer::new);
+		EntityRendererRegistry.register(HeartfallEntityRegistry.heartShard(), HeartShardEntityRenderer::new);
     }//?} else neoforge {
 	/*@SubscribeEvent
 	public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
