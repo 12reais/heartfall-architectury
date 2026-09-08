@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "heartfall:item/heart_shard_container",
+    "layer1": "heartfall:item/heart_shard_full"
+  }
+}
