@@ -5,6 +5,8 @@ package at.acpi.heartfall.neoforge;
 /*import at.acpi.heartfall.Heartfall;
 import at.acpi.heartfall.config.HeartfallConfig;
 import at.acpi.heartfall.registry.HeartfallEntityRegistry;
+import at.acpi.heartfall.registry.HeartfallItemRegistry;
+import at.acpi.heartfall.registry.HeartfallSoundRegistry;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
@@ -17,9 +19,16 @@ public class HeartfallNeoForgeEntrypoint {
 	public HeartfallNeoForgeEntrypoint(IEventBus bus) {
 		Heartfall.init();
 		HeartfallEntityRegistry.registerEntities(bus);
+		HeartfallItemRegistry.registerItems(bus);
+		HeartfallSoundRegistry.registerSounds(bus);
 
+		//? if <1.21.2 {
+		if (FMLEnvironment.dist != Dist.CLIENT)
+			return;
+		//?} else {
 		if (FMLEnvironment.getDist() != Dist.CLIENT)
 			return;
+		//?}
 
 		ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
 				() -> (_container, parent) -> HeartfallConfig.createScreen(parent));
