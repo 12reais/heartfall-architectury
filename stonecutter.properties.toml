@@ -9,9 +9,9 @@ mod.inception_year = "2026"
 mod.license.name = "MIT"
 mod.license.url = "https://spdx.org/licenses/MIT.html"
 mod.license.dist = "repo"
-mod.sources_url = "https://github.com/adoravel/heartfall"
-mod.homepage_url = "https://github.com/adoravel/heartfall"
-mod.issues_url = "https://github.com/adoravel/heartfall/issues"
+mod.sources_url = "https://codeberg.org/livia/heartfall"
+mod.homepage_url = "https://codeberg.org/adoravel/heartfall"
+mod.issues_url = "https://codeberg.org/adoravel/heartfall/issues"
 mod.discord_url = ""
 
 loomx.loom_version = "1.17-SNAPSHOT"
@@ -22,9 +22,9 @@ version = "26.1.2"
 buildscript = "build.fabric.gradle.kts"
 
 [[mod.pom.developers]]
-id = "adoravel"
-name = "adoravel"
-url = "https://github.com/adoravel"
+id = "livia"
+name = "livia"
+url = "https://codeberg.org/livia"
 
 [fabric]
 deps.fabric-loader = "0.19.3"
