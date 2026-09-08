@@ -53,7 +53,6 @@ fun Project.requireContextualisedProperty(vararg key: String, loader: String? = 
 	findContextualisedProperty(*key, loader = loader)
 		?: error("missing required property '${key.joinToString(".")}' in stonecutter.properties.toml")
 
-@OptIn(StonecutterExperimentalAPI::class)
 fun Project.stonecutterProperty(vararg key: String): ConfigValue<String> =
 	ConfigValue { requireStonecutterProperty(*key) }
 
@@ -85,7 +84,6 @@ fun Project.boolean(key: String, env: Boolean = false): ConfigValue<Boolean> =
 		else stonecutterProperty(key).value == "true"
 	}
 
-@OptIn(StonecutterExperimentalAPI::class)
 data class Context(
 	val project: Project,
 	val extension: ModPlatformExtension,

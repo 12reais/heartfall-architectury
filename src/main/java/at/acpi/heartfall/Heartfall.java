@@ -43,7 +43,7 @@ public final class Heartfall {
 
 		heart.setPos(safePos);
 		level.addFreshEntity(heart);
-		HeartfallSounds.playSpawn(level, safePos, entity.getRandom());
+		HeartfallSounds.playSpawnSound(level, safePos, entity.getRandom());
 	}
 
     //? if <1.21.2 {
